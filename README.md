@@ -4,7 +4,7 @@
 The purpose of this assessment is to complete a simple programming assignment. If you have any issues, seek help from Aptoide's Recruitment team. You are expected to work on this task on your own, without help or advice from others. You are required to:  
 
 **Before the technical interview:** 👨‍💻
-1. Produce a working and tested source code to solve the problem, and share it with us via Github.
+1. Produce a **working, well-structured, extensible and tested** source code to solve the problem, and share it with us via Github.
    
 **During the technical interview:** 🫱‍🫲🏾
 1. Walk through your code with the assessor, answering questions on the code and programming/design choices
@@ -47,5 +47,3 @@ BALANCE => User#123: €7.80; TrivialDriveDeveloper#2: €11.65 AptoideStore#1: 
 REWARD TRANSACTION => id: 3; amount: €0.06; sender: AptoideStore#1; receivers: {User#123: €0.06}
 BALANCE => User#123: €7.86; AptoideStore#1: €10.49
 ```
-
-The code and design should meet these requirements but be sufficiently flexible to allow for future extensibility. The code should be well structured, suitably commented, have error handling and be tested.
