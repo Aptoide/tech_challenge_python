@@ -27,19 +27,24 @@ The current promotion rewards the user with the following bonus percentage:
 - **5% if the user has already done 1 previous purchases in the app**;
 - **10% if the user has already done 10 previous purchases in the app**.
 
-The program should accept via the command line the app, the item to be purchased and the user that is doing the purchase. E.g.:  
+The program should accept via the command line the app, the item to be purchased and the user that is doing the purchase. And it should output the purchase transaction and the updated balance of all of the intervenients (users, developers and store) . If applicable, it should also output the reward transaction and the updated balance of all of the intervenients.
+
+## EXAMPLE 📃
+Assuming all intervenients have an initial balance of €10.00. 
+
+Input:
 ```TrivialDrive Oil User#123```
 
-The program should output the purchase transaction and the updated balance of all of the intervenients (users, developers and store) . If applicable, it should also output the reward transaction and the updated balance of all of the intervenients. E.g.: assuming all intervenients have an initial balance of €10.00, the output should be:
+Output:
 ```
 PURCHASE TRANSACTION => id: 1; app: TrivialDrive; item: Oil; amount: €1.00; sender: User#123; receivers: {TrivialDriveDeveloper#2: €0.75; AptoideStore#1: €0.25}  
 BALANCE => User#123: €9.00; TrivialDriveDeveloper#2: €10.75 AptoideStore#1: €10.25
 ```
 
-If User#123 does a second purchase with the following input:  
+Input:
 ```TrivialDrive Antifreeze User#123```
 
-Output to the console should be:  
+Output:  
 ```
 PURCHASE TRANSACTION => id: 2; app: TrivialDrive; item: Antifreeze; amount: €1.20; sender: User#123; receivers: {TrivialDriveDeveloper#2: €0.90; AptoideStore#1: €0.30}
 BALANCE => User#123: €7.80; TrivialDriveDeveloper#2: €11.65 AptoideStore#1: €10.55
