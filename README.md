@@ -27,9 +27,9 @@ The current promotion rewards the user with the following bonus percentage:
 - **5% if the user has already done 1 previous purchases in the app**;
 - **10% if the user has already done 10 previous purchases in the app**.
 
-The program should accept via the command line the app, the item to be purchased and the user that is doing the purchase. And it should output the purchase transaction and the updated balance of all of the intervenients (users, developers and store) . If applicable, it should also output the reward transaction and the updated balance of all of the intervenients.
+The program should accept via the command line the app, the item to be purchased and the user that is doing the purchase. And it should output the purchase transaction and the updated balance of all of the intervenients (users, developers and store). If applicable, it should also output the reward transaction and the updated balance of all of the intervenients.
 
-## EXAMPLE 📃
+## EXAMPLE 🕵️‍♀️
 Assuming all intervenients have an initial balance of €10.00. 
 
 Input:
