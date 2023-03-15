@@ -7,8 +7,8 @@ The purpose of this assessment is to complete a simple programming assignment. I
 1. Produce a **working, well-structured, extensible and tested** source code to solve the problem, and share it with us via Github.
    
 **During the technical interview:** 🫱‍🫲🏾
-1. Walk through your code with the assessor, answering questions on the code and programming/design choices
-2. Produce a small piece of code, integrated into you previously developed solution
+1. Walk through your code with the assessor, answering questions on the code and programming/design choices.
+2. Produce a small piece of code, integrated into you previously developed solution.
 
 ## CODING ASSIGNMENT 💻
 Write a program that can process a purchase in apps, like we do on Aptoide store. 
@@ -24,8 +24,8 @@ Assume that there are only 2 apps in the Aptoide Store. The items that can be pu
 - 5x_Diamonds - €2.00
 
 The current promotion rewards the user with the following bonus percentage:
-- **5% if the user has already done 1 previous purchases in the app**;
-- **10% if the user has already done 10 previous purchases in the app**.
+- 5% if the user has already done 1 previous purchases in the app
+- 10% if the user has already done 10 previous purchases in the app
 
 The program should accept via the command line the app, the item to be purchased and the user that is doing the purchase. And it should output the purchase transaction and the updated balance of all of the intervenients (users, developers and store). If applicable, it should also output the reward transaction and the updated balance of all of the intervenients.
 
