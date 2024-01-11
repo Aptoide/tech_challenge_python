@@ -23,7 +23,9 @@ Transaction_Amount: The monetary value of the transaction.
 
 3. Implement a logic for detecting anomalies in the provided dataset and return the list of anomalies when the GET endpoint is accessed. The response is in a JSON format, and it should look something like this:
 ```json
-{"anomalies": [{"Transaction_ID": "TX59", "Date": "2024-01-01 15:50", "Transaction_Amount": 2769.890232}, ...] } 
+{"anomalies": [{"Transaction_ID": "TX59", 
+                "Date": "2024-01-01 15:50", 
+                "Transaction_Amount": 2769.890232},...]} 
 ```
 
 ## EVALUATION CRITERIA ✅
