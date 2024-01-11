@@ -1,54 +1,35 @@
 # Technical Challenge Python
 
-## INSTRUCTIONS 📃
-The purpose of this assessment is to complete a simple programming assignment. If you have any issues, seek help from Aptoide's Recruitment team. You are expected to work on this task on your own, without help or advice from others. You are required to:  
+## PRE-REQUISITES 📝
+To take this challenge you will need to build a minimal REST API in Python using a framework of your choice. The API should detect transaction anomalies (i.e. outliers that deviate significantly from the expected norm) and have a single GET endpoint that returns a simple report with the list of detected anomalies.
 
-**Before the technical interview:** 👨‍💻
-1. Produce a **working, well-structured, extensible and tested** source code to solve the problem, and share it with us via Github.
-   
-**During the technical interview:** 🫱‍🫲🏾
-1. Walk through your code with the assessor, answering questions on the code and programming/design choices.
-2. Produce a small piece of code, integrated into you previously developed solution.
+## INSTRUCTIONS 📃
+
+**Before the live session:** 👨‍💻
+You are expected to work on this task on your own, without help or advice from others. If you need clarification please seek help from Aptoide by emailing the Recruitment team.
+
+**During the live session (technical interview with Aptoide developers):** 🫱‍🫲🏾
+Walk through your code with the assessor, answering questions on the code and programming/design choices as requested by the assessor.
 
 ## CODING ASSIGNMENT 💻
-Write a program that can process a purchase in apps, like we do on Aptoide store. 
+1. Build a Python REST API capable of responding to HTTP GET requests at a specific endpoint, e.g., `/anomalies_report`.
 
-Consider that for **each purchase 25% of the value goes to the Aptoide Store (id: "AptoideStore#1")** and the **remaining 75% goes to the app developer, which depends on the app (e.g. id: "TrivialDriveDeveloper#2")**. Also consider that **Aptoide Store rewards users with promotions**. 
-
-Assume that there are only 2 apps in the Aptoide Store. The items that can be purchased, which are all priced in EUR, are:
-1. In the app **TrivialDrive**, in which the developer ID is "TrivialDriveDeveloper#2":
-- Oil – €1.00 
-- Antifreeze – €1.20 
-
-2. In the app **DiamondLegend**, in which the developer ID is "DiamondLegendDeveloper#3":
-- 5x_Diamonds - €2.00
-
-The current promotion rewards the user with the following bonus percentage:
-- 5% if the user has already done 1 previous purchases in the app
-- 10% if the user has already done 10 previous purchases in the app
-
-The program should accept via the command line the **app**, the **item** to be purchased and the **user** that is doing the purchase. And it should output the **purchase transaction** and the **updated balance** of all of the intervenients (users, developers and store). If applicable, it should also output the **reward transaction** and the **updated balance** of all of the intervenients.
-
-## EXAMPLE 🕵️‍♀️
-Assuming all intervenients have an initial balance of €10.00. 
-
-Input:
-```TrivialDrive Oil User#123```
-
-Output:
-```
-PURCHASE TRANSACTION => id: 1; app: TrivialDrive; item: Oil; amount: €1.00; sender: User#123; receivers: {TrivialDriveDeveloper#2: €0.75; AptoideStore#1: €0.25}  
-BALANCE => User#123: €9.00; TrivialDriveDeveloper#2: €10.75 AptoideStore#1: €10.25
+2. Use the following [transactions dataset](https://github.com/Aptoide/tech_challenge_python/blob/main/transactions_dataset.csv) containing information about various financial transactions, each represented by several features:
+```yaml
+Transaction_ID: Unique identifier for each transaction.
+Date: The date and time when the transaction occurred.
+Transaction_Amount: The monetary value of the transaction.
 ```
 
-Input:
-```TrivialDrive Antifreeze User#123```
+3. Implement a logic for detecting anomalies in the provided dataset and return the list of anomalies when the GET endpoint is accessed. The response is in a JSON format, and it should look something like this:
+```json
+{"anomalies": [{"date": "2024-01-01 15:50", "transaction_id": 2769.890232}, ...] } 
+```
 
-Output:  
-```
-PURCHASE TRANSACTION => id: 2; app: TrivialDrive; item: Antifreeze; amount: €1.20; sender: User#123; receivers: {TrivialDriveDeveloper#2: €0.90; AptoideStore#1: €0.30}
-BALANCE => User#123: €7.80; TrivialDriveDeveloper#2: €11.65 AptoideStore#1: €10.55
-#########
-REWARD TRANSACTION => id: 3; amount: €0.06; sender: AptoideStore#1; receivers: {User#123: €0.06}
-BALANCE => User#123: €7.86; AptoideStore#1: €10.49
-```
+## EVALUATION CRITERIA ✅
+- Correctness of the API implementation (with clear and well structured code).
+- Exception and error handling (that might occur during API operation).
+- Clarity of the README.md file (that explains how to run your API and make a request to the endpoint using a tool like cURL).
+
+## SUBMISSION
+Submit your project as a GitHub repository containing your code and the README.md and share the link with Aptoide Recruitment team.
