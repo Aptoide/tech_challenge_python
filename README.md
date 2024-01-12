@@ -19,6 +19,7 @@ Walk through your code with the assessor, answering questions on the code and pr
 Transaction_ID: Unique identifier for each transaction.
 Date: The date and time when the transaction occurred.
 Transaction_Amount: The monetary value of the transaction.
+Country: The origin country of the transaction.
 ```
 
 3. Implement a logic for detecting anomalies in the provided dataset and return the list of anomalies when the GET endpoint is accessed. The response is in a JSON format, and it should look something like this:
@@ -29,8 +30,8 @@ Transaction_Amount: The monetary value of the transaction.
 ```
 
 ## EVALUATION CRITERIA ✅
+- Detection of all anomalies in the dataset.
 - Correctness of the API implementation (with clear and well structured code).
-- Exception and error handling (that might occur during API operation).
 - Clarity of the README.md file (that explains how to run your API and make a request to the endpoint using a tool like cURL).
 
 ## SUBMISSION
