@@ -1,11 +1,12 @@
 # Technical Challenge Python
 
 ## PRE-REQUISITES 📝
-To take this challenge you will need to build a minimal script in Python using Python packages of your choice. 
-The script should perform the steps that usually an App Store performs when requesting an app. It consists in 3 requests to our APIs:
-1 - Search for Apps - displays available apps by browsing through categories or search keywords.
-2 - Display App Details - for a given app, show images, descriptions
-3 - Download the App - download the app file
+To take this challenge you will need to build a minimal Python script. 
+The script should perform the steps that an App Store usually performs when requesting an app. It consists of 3 requests to our APIs:
+
+1. **Search for Apps** - displays available apps by browsing through categories or search keywords.
+2. **Display App Details** - for a given app, show images, descriptions
+3. **Download the App** - download the app file
 
 ## INSTRUCTIONS 📃
 
@@ -16,23 +17,23 @@ You are expected to work on this task on your own, without help or advice from o
 Walk through your code with the assessor, answering questions on the code and programming/design choices as requested by the assessor.
 
 ## CODING ASSIGNMENT 💻
-Build a Python script capable of performing HTTP requests with correct parameters defined below:
-1. Search and display to the console the list of apps obtained from API call using the following URL:
+Build a Python script capable of performing HTTP requests with the correct parameters defined below:
+1. **Search** and display to the console the list of apps obtained from the API call using the following URL:
    ```
    https://ws75.aptoide.com/api/7/apps/get/store_name=apps/q=bWF4U2RrPTE5Jm1heFNjcmVlbj1ub3JtYWwmbWF4R2xlcz0yLjA/group_name=games/limit=10/offset=0/mature=false
    ```
-   EXTRA: Can you print to the console the original value of "q" parameter assuming that on the URL above it is a base64 encoded query string that summarises device specifications?
+   **EXTRA:** Can you print to the console the original value of "q" parameter assuming that on the URL above it is a base64 encoded query string that summarises device specifications?
 
-2. Display to the console the details an app obtained in the previous response (e.g. com.fun.lastwar.gp). Use the following URL:
+2. **Display** to the console the details an app obtained in the previous response (e.g. com.fun.lastwar.gp). Use the following URL:
    ```
    https://ws75.aptoide.com/api/7/app/get/store_name=apps/q=bWF4U2RrPTE5Jm1heFNjcmVlbj1ub3JtYWwmbWF4R2xlcz0yLjA/package_name=com.fun.lastwar.gp/language=pt_PT/
    ```
  
-3. Download the app file (APK) by requesting the following URL:
+3. **Download** the app file (APK) by requesting the following URL:
    ```
    https://aptoide-mmp.aptoide.com/api/v1/download/b2VtaWQ9VGVjaENoYWxsZW5nZVB5dGhvbiZwYWNrYWdlX25hbWU9Y29tLmZ1bi5sYXN0d2FyLmdwJnJlZGlyZWN0X3VybD1odHRwczovL3Bvb2wuYXBrLmFwdG9pZGUuY29tL2FwcHMvY29tLWZ1bi1sYXN0d2FyLWdwLTk5OTk5LTY2NjEyOTMwLWE3MThmOWZlMjE5OGM1Y2EyYzIwMmUwNDYzZTVkZDk1LmFwaw==?resolution=1080x1776
    ```
-   OPPSSS... It seems someone forgot to add a mandatory parameter. Can you fix the previous URL with the missing paramenter with a dummy value (e.g. testchallenge)?
+   OPPSSS... It seems someone forgot to add a mandatory parameter. Can you fix the previous URL by including the missing parameter with a dummy value (e.g. testchallenge)?
 
 
 ## EVALUATION CRITERIA ✅
@@ -41,4 +42,4 @@ Build a Python script capable of performing HTTP requests with correct parameter
 - Clarity of the README.md file (that explains how to run your script).
 
 ## SUBMISSION
-Submit your project as a GitHub repository containing your code and the README.md and share the link with Aptoide Recruitment team.
+Submit your project as a GitHub repository containing your code and the README.md and share the link with the Aptoide Recruitment team.
