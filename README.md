@@ -1,7 +1,11 @@
 # Technical Challenge Python
 
 ## PRE-REQUISITES 📝
-To take this challenge you will need to build a minimal REST API in Python using a framework of your choice. The API should detect transaction anomalies (i.e. outliers that deviate significantly from the expected norm) and have a single GET endpoint that returns a simple report with the list of detected anomalies.
+To take this challenge you will need to build a minimal script in Python using Python packages of your choice. 
+The script should perform the steps that usually an App Store performs when requesting an app. It consists in 3 requests to our APIs:
+1 - Search for Apps - displays available apps by browsing through categories or search keywords.
+2 - Display App Details - for a given app, show images, descriptions
+3 - Download the App - download the app file
 
 ## INSTRUCTIONS 📃
 
@@ -12,27 +16,29 @@ You are expected to work on this task on your own, without help or advice from o
 Walk through your code with the assessor, answering questions on the code and programming/design choices as requested by the assessor.
 
 ## CODING ASSIGNMENT 💻
-1. Build a Python REST API capable of responding to HTTP GET requests at a specific endpoint, e.g., `/anomalies_report`.
+Build a Python script capable of performing HTTP requests with correct parameters defined below:
+1. Search and display to the console the list of apps obtained from API call using the following URL:
+   ```
+   https://ws75.aptoide.com/api/7/apps/get/store_name=apps/q=bWF4U2RrPTE5Jm1heFNjcmVlbj1ub3JtYWwmbWF4R2xlcz0yLjA/group_name=games/limit=10/offset=0/mature=false
+   ```
+   EXTRA: Can you print to the console the original value of "q" parameter assuming that on the URL above it is a base64 encoded query string that summarises device specifications?
 
-2. Use the following [transactions dataset](https://github.com/Aptoide/tech_challenge_python/blob/main/transactions_dataset.csv) containing information about various financial transactions, each represented by several features:
-```yaml
-Transaction_ID: Unique identifier for each transaction.
-Date: The date and time when the transaction occurred.
-Transaction_Amount: The monetary value of the transaction.
-Country: The origin country of the transaction.
-```
+2. Display to the console the details an app obtained in the previous response (e.g. com.fun.lastwar.gp). Use the following URL:
+   ```
+   https://ws75.aptoide.com/api/7/app/get/store_name=apps/q=bWF4U2RrPTE5Jm1heFNjcmVlbj1ub3JtYWwmbWF4R2xlcz0yLjA/package_name=com.fun.lastwar.gp/language=pt_PT/
+   ```
+ 
+3. Download the app file (APK) by requesting the following URL:
+   ```
+   https://aptoide-mmp.aptoide.com/api/v1/download/b2VtaWQ9VGVjaENoYWxsZW5nZVB5dGhvbiZwYWNrYWdlX25hbWU9Y29tLmZ1bi5sYXN0d2FyLmdwJnJlZGlyZWN0X3VybD1odHRwczovL3Bvb2wuYXBrLmFwdG9pZGUuY29tL2FwcHMvY29tLWZ1bi1sYXN0d2FyLWdwLTk5OTk5LTY2NjEyOTMwLWE3MThmOWZlMjE5OGM1Y2EyYzIwMmUwNDYzZTVkZDk1LmFwaw==?resolution=1080x1776
+   ```
+   OPPSSS... It seems someone forgot to add a mandatory parameter. Can you fix the previous URL with the missing paramenter with a dummy value (e.g. testchallenge)?
 
-3. Implement a logic for detecting anomalies in the provided dataset and return the list of anomalies when the GET endpoint is accessed. The response is in a JSON format, and it should look something like this:
-```json
-{"anomalies": [{"Transaction_ID": "TX59", 
-                "Date": "2024-01-01 15:50", 
-                "Transaction_Amount": 2769.890232},...]} 
-```
 
 ## EVALUATION CRITERIA ✅
-- Detection of all anomalies in the dataset.
-- Correctness of the API implementation (with clear and well structured code).
-- Clarity of the README.md file (that explains how to run your API and make a request to the endpoint using a tool like cURL).
+- The correct execution of the 3 previous steps.
+- Correctness of the script implementation (with clear and well structured code).
+- Clarity of the README.md file (that explains how to run your script).
 
 ## SUBMISSION
 Submit your project as a GitHub repository containing your code and the README.md and share the link with Aptoide Recruitment team.
