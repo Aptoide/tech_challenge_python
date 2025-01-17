@@ -22,9 +22,9 @@ Build a Python script capable of performing HTTP requests with the correct param
    ```
    https://ws75.aptoide.com/api/7/apps/get/store_name=apps/q=bWF4U2RrPTE5Jm1heFNjcmVlbj1ub3JtYWwmbWF4R2xlcz0yLjA/group_name=games/limit=10/offset=0/mature=false
    ```
-   **EXTRA:** Can you print to the console the original value of "q" parameter assuming that on the URL above it is a base64 encoded query string that summarises device specifications?
+   **EXTRA:** Can you print to the console the decoded value of "q" parameter assuming that on the URL above it is a base64 encoded query string that summarises device specifications?
 
-2. **Display** to the console the details an app obtained in the previous response (e.g. com.fun.lastwar.gp). Use the following URL:
+2. **Display** to the console the app description extracted from the app details (e.g. use the app ```com.fun.lastwar.gp```). Use the following URL:
    ```
    https://ws75.aptoide.com/api/7/app/get/store_name=apps/q=bWF4U2RrPTE5Jm1heFNjcmVlbj1ub3JtYWwmbWF4R2xlcz0yLjA/package_name=com.fun.lastwar.gp/language=pt_PT/
    ```
