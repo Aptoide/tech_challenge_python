@@ -1,21 +1,5 @@
 # Technical Challenge Python
 
-## PRE-REQUISITES 📝
-To take this challenge you will need to build a minimal Python script. 
-The script should perform the steps that an App Store usually performs when requesting an app. It consists of 3 requests to our APIs:
-
-1. **Search for Apps** - displays available apps by browsing through categories or search keywords.
-2. **Display App Details** - for a given app, show images, descriptions
-3. **Download the App** - download the app file
-
-## INSTRUCTIONS 📃
-
-**Before the live session:** 👨‍💻
-You are expected to work on this task on your own, without help or advice from others. If you need clarification please seek help from Aptoide by emailing the Recruitment team.
-
-**During the live session (technical interview with Aptoide developers):** 🫱‍🫲🏾
-Walk through your code with the assessor, answering questions on the code and programming/design choices as requested by the assessor.
-
 ## CODING ASSIGNMENT 💻
 Build a Python script capable of performing HTTP requests with the correct parameters defined below:
 1. **Search** and display to the console the list of apps obtained from the API call using the following URL:
