@@ -1,29 +1,71 @@
-# Technical Challenge Python
+# 🐍 Python Developer Challenge – Aptoide Scraper API
 
-## CODING ASSIGNMENT 💻
-Build a Python script capable of performing HTTP requests with the correct parameters defined below:
-1. **Search** and display to the console the list of apps obtained from the API call using the following URL:
-   ```
-   https://ws75.aptoide.com/api/7/apps/get/store_name=apps/q=bWF4U2RrPTE5Jm1heFNjcmVlbj1ub3JtYWwmbWF4R2xlcz0yLjA/group_name=games/limit=10/offset=0/mature=false
-   ```
-   **EXTRA:** Can you print to the console the decoded value of "q" parameter assuming that on the URL above it is a base64 encoded query string that summarises device specifications?
+Welcome to the coding challenge! 🚀 
+Your task is to build a Python-based API that scrapes package data from the Aptoide app store (https://en.aptoide.com/) and exposes it through a REST endpoint.
 
-2. **Display** to the console the app description extracted from the app details (e.g. use the app ```com.fun.lastwar.gp```). Use the following URL:
-   ```
-   https://ws75.aptoide.com/api/7/app/get/store_name=apps/q=bWF4U2RrPTE5Jm1heFNjcmVlbj1ub3JtYWwmbWF4R2xlcz0yLjA/package_name=com.fun.lastwar.gp/language=pt_PT/
-   ```
- 
-3. **Download** the app file (APK) by requesting the following URL:
-   ```
-   https://aptoide-mmp.aptoide.com/api/v1/download/b2VtaWQ9VGVjaENoYWxsZW5nZVB5dGhvbiZwYWNrYWdlX25hbWU9Y29tLmZ1bi5sYXN0d2FyLmdwJnJlZGlyZWN0X3VybD1odHRwczovL3Bvb2wuYXBrLmFwdG9pZGUuY29tL2FwcHMvY29tLWZ1bi1sYXN0d2FyLWdwLTk5OTk5LTY2NjEyOTMwLWE3MThmOWZlMjE5OGM1Y2EyYzIwMmUwNDYzZTVkZDk1LmFwaw==?resolution=1080x1776
-   ```
-   OPPSSS... It seems someone forgot to add a mandatory parameter. **Can you fix the previous URL by including the missing parameter with a dummy value** (e.g. testchallenge)?
+## 📋 Challenge Description
 
+You are required to:  
+1 - Develop an API (using FastAPI or Flask, your choice) that exposes an endpoint:
+```
+GET /aptoide?package_name=<package_id>
+```
 
-## EVALUATION CRITERIA ✅
-- The correct execution of the 3 previous steps.
-- Correctness of the script implementation (with clear and well structured code).
-- Clarity and simplicity of the README.md file (that explains how to run your script).
+2 - This endpoint should:
+  - Accept a package name as a query parameter (e.g. com.facebook.katana).
+  - Scrape or fetch package details from Aptoide.
+  - Return all relevant metadata about the app in JSON format.
 
-## SUBMISSION
-Submit your project as a GitHub repository containing your code and the README.md and share the link with the Aptoide Recruitment team.
+## 🧾 Example
+
+Request:
+```
+GET /aptoide?package_name=com.facebook.katana
+```
+
+Response (JSON):
+```
+{
+  "name": "Facebook",
+  "size": "152.5 MB",
+  "downloads": "2B",
+  "version": "532.0.0.55.71",
+  "release_date": "2025-09-30 17:06:59",
+  "min_screen": "SMALL",
+  "supported_cpu": "arm64-v8a",
+  "package_id": "com.facebook.katana",
+  "sha1_signature": "8A:3C:4B:26:2D:72:1A:CD:49:A4:BF:97:D5:21:31:99:C8:6F:A2:B9",
+  "developer_cn": "Facebook Corporation",
+  "organization": "Facebook Mobile",
+  "local": "Palo Alto",
+  "country": "US",
+  "state_city": "CA"
+}
+```
+
+## ✅ Requirements
+
+- Use Python 3.9+.
+- Use a modern API framework (FastAPI preferred).
+- Write clean, well-structured, and documented code.
+- Ensure that errors (e.g. missing package, invalid input) are handled gracefully.
+- Include instructions to run the project locally.
+
+## 🚀 Deliverables
+
+Create GitHub repository (and share the link with the Aptoide Recruitment team) containing:
+- Your *source code*,
+- A README.md with:
+    - Setup instructions.
+    - Example requests/responses.
+    - Any assumptions or design decisions.
+
+## 🎯 Evaluation Criteria
+
+- Functionality & scalability
+- Code readability & structure.
+- API design principles.
+- Error handling.
+- Testing approach.
+
+Good luck, and happy coding! 💻✨
