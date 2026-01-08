@@ -1,13 +1,14 @@
 import httpx
-from bs4 import BeaultifulSoup
+from bs4 import BeautifulSoup
 from typing import Dict, Optional
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
 class AptoideScraper:
     def __init__(self):
-        self.base_url = "https.//{package_name}.en.aptoide.com/app"
+        self.base_url = "https://{package_name}.en.aptoide.com/app"
         self.client = httpx.AsyncClient(
             timeout=30.0,
             headers={
@@ -25,7 +26,7 @@ class AptoideScraper:
             response = await self.client.get(url)
             response.raise_for_status()
 
-            soup = BeaultifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response.text, 'html.parser')
 
             #Procura por verificação
             if not self._app_exists(soup):
@@ -45,22 +46,22 @@ class AptoideScraper:
 
     def _extract_base_name(self, package_name: str) -> str:
         #Extrair dados facebook de katana
-        if package_name.startswith('.com'):
+        if package_name.startswith('com.'):
             parts = package_name.split('.')
             if len(parts) >= 2:
                 return parts[1]
         return package_name
 
-    def _app_exists(self,soup: BeaultifulSoup) -> bool:
+    def _app_exists(self, soup: BeautifulSoup) -> bool:
         #Verifica existencia do app
-        tittle = soup.find('title')
-        if tittle and 'APK Download' in tittle.text:
+        title = soup.find('title')
+        if title and 'APK Download' in title.text:
             return True
 
         apk_section = soup.find(text="APK Information")
         return apk_section is not None
     
-    def _extract_all_data(self, soup: BeaultifulSoup, package_name:str) -> Dict [str,str]:
+    def _extract_all_data(self, soup: BeautifulSoup, package_name:str) -> Dict [str,str]:
         #Extrair campos da pag
         data = {}
 
@@ -75,14 +76,14 @@ class AptoideScraper:
         if downloads_elem:
             parent = downloads_elem.parent
             if parent:
-                downloads_text = parent.get_text(stirp=True)
-                import re
-                match = re.search(r'(\d+\.?d*[BMK]?\+?)', downloads_text)
+                downloads_text = parent.get_text(strip=True)
+                # NÃO precisa importar re aqui, já está no topo
+                match = re.search(r'(\d+\.?\d*[BMK]?\+?)', downloads_text)
                 if match:
                     data['downloads'] = match.group(1)
-
-    #Extrai da secção "APK Information"
-    apk_header = soup.find(lambda tag: tag.name in ['h2', 'h3', 'h4']and 'APK Information' in tag.text)
+        
+        # Extrai da secção "APK Information"
+        apk_header = soup.find(lambda tag: tag.name in ['h2', 'h3', 'h4'] and 'APK Information' in tag.text)
 
     if apk_header:
         container = apk_header.find_next('div') or apk_header.parent
@@ -118,15 +119,15 @@ class AptoideScraper:
     #Verifica a existencia de campos obrigatórios
     required_fields = [
         'name', 'size', 'downloads', 'version', 'release_date',
-        'main_screen', 'supported_cpu', 'package_id', 'shal_signature',
+        'min_screen', 'supported_cpu', 'package_id', 'sha1_signature',
         'developer_cn', 'organization', 'local', 'country', 'state_city'
     ]
 
     for field in required_fields:
         if field not in data:
             data[field] = "Not available"
-    
-    return data
+        
+        return data
 
     #Função auxiliar
 async def fetch_app_data(package_name: str) -> Dict[str, str]:

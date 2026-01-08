@@ -1,6 +1,5 @@
-fastapi
-uvicorn
-httpx
-beautifulsoup4
-python-multipart
-pydantic
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+httpx==0.25.1
+beautifulsoup4==4.12.2
+pydantic ==2.5.0
