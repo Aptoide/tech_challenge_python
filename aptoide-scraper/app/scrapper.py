@@ -42,3 +42,11 @@ class AptoideScrapper:
             raise
         finally:
             await self.client.aclose()
+
+    def _extract_base_name(self, package_name: str) -> str:
+        #Extrair dados facebook de katana
+        if package_name.startswith('.com'):
+            parts = package_name.split('.')
+            if len(parts) >= 2:
+                return parts[1]
+        return package_name
