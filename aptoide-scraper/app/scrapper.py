@@ -81,3 +81,51 @@ class AptoideScrapper:
                 if match:
                     data['downloads'] = match.group(1)
 
+    #Extrai da secção "APK Information"
+    apk_header = soup.find(lambda tag: tag.name in ['h2', 'h3', 'h4']and 'APK Information' in tag.text)
+
+    if apk_header:
+        container = apk_header.find_next('div') or apk_header.parent
+
+        for item in container.find_all(['p', 'div', 'span']):
+            text = item.get_text(strip=True)
+            if ':' in text:
+                key, value = text.split(':', 1)
+                key = key.strip().lower()
+                value = value.strip()
+
+                field_map = {
+                    'package': 'package_id',
+                        'apk version': 'version',
+                        'size': 'size',
+                        'release date': 'release_date',
+                        'min screen': 'min_screen',
+                        'supported cpu': 'supported_cpu',
+                        'sha1 signature': 'sha1_signature',
+                        'developer (cn)': 'developer_cn',
+                        'organization (o)': 'organization',
+                        'local (l)': 'local',
+                        'country (c)': 'country',
+                        'state/city (st)': 'state_city'
+                }
+
+                if key in field_map:
+                    data[field_map[key]] = value
+
+    #Verifica package_id
+    data ['package_id'] = package_name
+
+    #Verifica a existencia de campos obrigatórios
+    required_fields = [
+        'name', 'size', 'downloads', 'version', 'release_date',
+        'main_screen', 'supported_cpu', 'package_id', 'shal_signature',
+        'developer_cn', 'organization', 'local', 'country', 'state_city'
+    ]
+
+    for field in required_fields:
+        if field not in data:
+            data[field] = "Not available"
+    
+    return data
+        
+
