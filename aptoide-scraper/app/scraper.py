@@ -17,7 +17,7 @@ class AptoideScraper:
 
     async def get_app_data(self, package_name: str) -> Dict[str, str]:
         base_name = self._extract_base_name(package_name)
-        url = self.base_url.format(package_name=base_name)
+        url = self.base_url.format(package_name = base_name)
 
         logger.info(f"Buscando app em: {url}")
 
