@@ -60,3 +60,24 @@ class AptoideScrapper:
         apk_section = soup.find(text="APK Information")
         return apk_section is not None
     
+    def _extract_all_data(self, soup: BeaultifulSoup, package_name:str) -> Dict [str,str]:
+        #Extrair campos da pag
+        data = {}
+
+        #Nome
+        title= soup.find('title')
+        if title:
+            name = title.text.replace(' - APK Download for Android', '').strip()
+            data['name'] = name
+        
+        #Downloads
+        downloads_elem = soup.find(text=lambda t: t and 'downloads' in t.lower())
+        if downloads_elem:
+            parent = downloads_elem.parent
+            if parent:
+                downloads_text = parent.get_text(stirp=True)
+                import re
+                match = re.search(r'(\d+\.?d*[BMK]?\+?)', downloads_text)
+                if match:
+                    data['downloads'] = match.group(1)
+
