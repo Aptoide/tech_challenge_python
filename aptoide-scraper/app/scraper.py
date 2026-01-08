@@ -74,4 +74,105 @@ class AptoideScraper:
 
                 #Conversor
                 downloads = app_info.get('stats', {}).get('download', 0)
+                data['downloads'] = self._format_downloads(downloads)
+                
+                #Versão
+                file_info = app_info.get('file', {})
+                data['version'] = file_info.get('vername', '')
+                
+                #Tamanho
+                size_bytes = file_info.get('filesize', 0)
+                data['size'] = self._format_size(size_bytes)
+                
+                #Data de release
+                data['release_date'] = file_info.get('added', '').replace('T', ' ')
+                
+                #Hardware
+                hardware = file_info.get('hardware', {})
+                data['min_screen'] = hardware.get('screen', '')
+                data['supported_cpu'] = ', '.join(hardware.get('cpus', [])) or "arm64-v8a"
+                
+                #Assinatura e dev
+                signature = file_info.get('signature', {})
+                data['sha1_signature'] = signature.get('sha1', '')
+                
+                owner = signature.get('owner', {})
+                data['developer_cn'] = owner.get('CN', '')
+                data['organization'] = owner.get('O', '')
+                data['local'] = owner.get('L', '')
+                data['country'] = owner.get('C', '')
+                data['state_city'] = owner.get('ST', '')
+                
+        except (json.JSONDecodeError, KeyError, AttributeError) as e:
+            logger.warning(f"Erro ao parsear JSON: {e}")
+        
+        return data
+    
+    def _complement_with_html(self, soup: BeautifulSoup, data: Dict[str, str], package_name: str):
+        """Completa dados faltantes com HTML scraping"""
+        
+        #Se não encontrou downloads no JSON, procura no HTML
+        if not data.get('downloads') or data['downloads'] == '0':
+            for elem in soup.find_all(text=re.compile(r'2B\+')):
+                if elem:
+                    data['downloads'] = "2B"
+                    break
+        
+        #Título
+        if not data.get('name'):
+            title = soup.find('title')
+            if title:
+                data['name'] = title.text.split('|')[0].split('-')[0].strip()
+    
+    def _extract_from_html(self, soup: BeautifulSoup, package_name: str) -> Dict[str, str]:
+        """Método fallback: extrai apenas do HTML"""
+        data = {"package_id": package_name}
+        
+        #Nome
+        title = soup.find('title')
+        if title:
+            data['name'] = title.text.split('|')[0].split('-')[0].strip()
+        
+        #Procura por "2B+" no texto
+        all_text = soup.get_text()
+        if '2B+' in all_text:
+            data['downloads'] = "2B"
+        
+        version_match = re.search(r'(\d+\.\d+\.\d+\.\d+\.\d+)', all_text)
+        if version_match:
+            data['version'] = version_match.group(1)
+        
+        #Campos obrigatórios
+        required_fields = [
+            'name', 'size', 'downloads', 'version', 'release_date',
+            'min_screen', 'supported_cpu', 'package_id', 'sha1_signature',
+            'developer_cn', 'organization', 'local', 'country', 'state_city'
+        ]
+        
+        for field in required_fields:
+            if field not in data:
+                data[field] = "Not available"
+        
+        return data
+    
+    def _format_downloads(self, downloads: int) -> str:
+        """Formata número de downloads (ex: 2000000000 -> 2B)"""
+        if downloads >= 1000000000:
+            return f"{downloads // 1000000000}B"
+        elif downloads >= 1000000:
+            return f"{downloads // 1000000}M"
+        elif downloads >= 1000:
+            return f"{downloads // 1000}K"
+        return str(downloads)
+    
+    def _format_size(self, size_bytes: int) -> str:
+        """Formata tamanho em bytes para MB"""
+        if size_bytes:
+            size_mb = size_bytes / (1024 * 1024)
+            return f"{size_mb:.1f} MB"
+        return "Not available"
+
+async def fetch_app_data(package_name: str) -> Dict[str, str]:
+    scraper = AptoideScraper()
+    return await scraper.get_app_data(package_name)
             
