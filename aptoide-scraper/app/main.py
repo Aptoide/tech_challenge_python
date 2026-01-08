@@ -2,8 +2,6 @@
 from fastapi import FastAPI, HTTPException, Query
 from app.scraper import AptoideScraper
 from app.schemas import AppResponse
-from app.exceptions import AppNotFoundError
-from app.exceptions import ScrapingError
 import logging
 
 logging.basicConfig(level = logging.INFO)
