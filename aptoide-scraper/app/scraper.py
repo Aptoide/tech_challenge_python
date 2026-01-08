@@ -5,7 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class AptoideScrapper:
+class AptoideScraper:
     def __init__(self):
         self.base_url = "https.//{package_name}.en.aptoide.com/app"
         self.client = httpx.AsyncClient(
@@ -127,5 +127,10 @@ class AptoideScrapper:
             data[field] = "Not available"
     
     return data
+
+    #Função auxiliar
+async def fetch_app_data(package_name: str) -> Dict[str, str]:
+    scraper = AptoideScraper()
+    return await scraper.get_app_data(package_name)
         
 
