@@ -1,7 +1,8 @@
 import httpx
 from bs4 import BeautifulSoup
-from typing import Dict, Optional
+from typing import Dict
 import logging
+import json
 import re
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ class AptoideScraper:
 
     async def get_app_data(self, package_name: str) -> Dict[str, str]:
         base_name = self._extract_base_name(package_name)
-        url = self.base_url.format(package_name = base_name)
+        url = self.base_url.format(package_name=base_name)
 
         logger.info(f"Buscando app em: {url}")
 
@@ -28,16 +29,17 @@ class AptoideScraper:
 
             soup = BeautifulSoup(response.text, 'html.parser')
 
-            # Procura por verificação
-            if not self._app_exists(soup):
-                raise ValueError(f"App com package '{package_name}' não foi encontrado")
-
-            # Extrair dados
-            app_data = self._extract_all_data(soup, package_name)
-            return app_data
+            #Extrai dados do JSON
+            json_data = self._extract_from_json(soup, package_name)
+            
+            #Se não encontrou tudo no JSON, complementa com HTML
+            if json_data:
+                self._complement_with_html(soup, json_data, package_name)
+                return json_data
+            else:
+                return self._extract_from_html(soup, package_name)
 
         except httpx.HTTPStatusError as e:
-            logger.error(f"Erro HTTP {e.response.status_code} para {package_name}")
             if e.response.status_code == 404:
                 raise ValueError(f"App '{package_name}' não encontrado")
             raise
@@ -45,123 +47,135 @@ class AptoideScraper:
             await self.client.aclose()
 
     def _extract_base_name(self, package_name: str) -> str:
-        # Extrair dados facebook de katana
         if package_name.startswith('com.'):
             parts = package_name.split('.')
             if len(parts) >= 2:
                 return parts[1]
         return package_name
 
-    def _app_exists(self, soup: BeautifulSoup) -> bool:
-        # Verifica existencia do app
-        title = soup.find('title')
-        if title and 'APK Download' in title.text:
-            return True
-
-        apk_section = soup.find(text="APK Information")
-        return apk_section is not None
+    def _extract_from_json(self, soup: BeautifulSoup, package_name: str) -> Dict[str, str]:
+        """Extrai dados do script __NEXT_DATA__ (MELHOR MÉTODO)"""
+        data = {"package_id": package_name}
+        
+        #Procura pelo script com JSON
+        script_tag = soup.find('script', id='__NEXT_DATA__')
+        
+        if not script_tag:
+            return data
+        
+        try:
+            json_content = json.loads(script_tag.string)
+            
+            # Navega até os dados do app
+            app_info = json_content.get('props', {}).get('pageProps', {}).get('app', {})
+            
+            if app_info:
+                # Mapeamento direto dos campos
+                data['name'] = app_info.get('name', '')
+                data['package_id'] = app_info.get('package', package_name)
+                
+                # Downloads (converte 2000000000 para "2B")
+                downloads = app_info.get('stats', {}).get('downloads', 0)
+                data['downloads'] = self._format_downloads(downloads)
+                
+                # Versão
+                file_info = app_info.get('file', {})
+                data['version'] = file_info.get('vername', '')
+                
+                # Tamanho (converte bytes para MB)
+                size_bytes = file_info.get('filesize', 0)
+                data['size'] = self._format_size(size_bytes)
+                
+                # Data de release
+                data['release_date'] = file_info.get('added', '').replace('T', ' ')
+                
+                # Informações de hardware
+                hardware = file_info.get('hardware', {})
+                data['min_screen'] = hardware.get('screen', '')
+                data['supported_cpu'] = ', '.join(hardware.get('cpus', [])) or "arm64-v8a"
+                
+                # Assinatura e desenvolvedor
+                signature = file_info.get('signature', {})
+                data['sha1_signature'] = signature.get('sha1', '')
+                
+                owner = signature.get('owner', {})
+                data['developer_cn'] = owner.get('CN', '')
+                data['organization'] = owner.get('O', '')
+                data['local'] = owner.get('L', '')
+                data['country'] = owner.get('C', '')
+                data['state_city'] = owner.get('ST', '')
+                
+        except (json.JSONDecodeError, KeyError, AttributeError) as e:
+            logger.warning(f"Erro ao parsear JSON: {e}")
+        
+        return data
     
-    def _extract_all_data(self, soup: BeautifulSoup, package_name: str) -> Dict[str, str]:
-        # Extrair campos da página
-        data = {}
-
+    def _complement_with_html(self, soup: BeautifulSoup, data: Dict[str, str], package_name: str):
+        """Completa dados faltantes com HTML scraping"""
+        
+        # Se não encontrou downloads no JSON, procura no HTML
+        if not data.get('downloads') or data['downloads'] == '0':
+            # Procura por "2B+" no HTML
+            for elem in soup.find_all(text=re.compile(r'2B\+')):
+                if elem:
+                    data['downloads'] = "2B"
+                    break
+        
+        # Título para nome se não encontrou
+        if not data.get('name'):
+            title = soup.find('title')
+            if title:
+                data['name'] = title.text.split('|')[0].split('-')[0].strip()
+    
+    def _extract_from_html(self, soup: BeautifulSoup, package_name: str) -> Dict[str, str]:
+        """Método fallback: extrai apenas do HTML"""
+        data = {"package_id": package_name}
+        
         # Nome
         title = soup.find('title')
         if title:
-            name = title.text.split('|')[0].strip()
-            name = name.split('- APK Download')[0].strip()
-            data['name'] = name
+            data['name'] = title.text.split('|')[0].split('-')[0].strip()
         
-        # Downloads
-        downloads_text = ""
+        # Procura por "2B+" no texto
+        all_text = soup.get_text()
+        if '2B+' in all_text:
+            data['downloads'] = "2B"
         
-        # Várias formas de encontrar os downloads
-        downloads_selectors = [
-            soup.find(text=re.compile(r'\d+[BMK]?\+\s*[Dd]ownloads')),
-            soup.find(text=re.compile(r'[Dd]ownloads.*\d+[BMK]?\+')),
-            soup.find('span', {'class': re.compile(r'download', re.IGNORECASE)}),
-            soup.find('div', {'class': re.compile(r'download', re.IGNORECASE)}),
-        ]
+        # Procura por versão no formato 541.0.0.85.79
+        version_match = re.search(r'(\d+\.\d+\.\d+\.\d+\.\d+)', all_text)
+        if version_match:
+            data['version'] = version_match.group(1)
         
-        for selector in downloads_selectors:
-            if selector:
-                if hasattr(selector, 'get_text'):
-                    downloads_text = selector.get_text(strip=True)
-                else:
-                    downloads_text = str(selector)
-                break
-        
-        if downloads_text:
-            match = re.search(r'(\d+\.?\d*[BMK]?\+?)', downloads_text)
-            if match:
-                data['downloads'] = match.group(1)
-        
-        # Procura a seção APK Information
-        apk_header = None
-        apk_selectors = [
-            soup.find('h2', text='APK Information'),
-            soup.find('h3', text='APK Information'), 
-            soup.find('h4', text='APK Information'),
-            soup.find(text=re.compile(r'APK Information')),
-        ]
-        
-        for selector in apk_selectors:
-            if selector:
-                apk_header = selector
-                break
-
-        if apk_header:
-            # Encontra o container com os dados
-            container = apk_header.find_next('div')
-            if not container:
-                container = apk_header.parent
-            
-            # Extrai todos os textos do container
-            all_texts = container.find_all(text=True) if container else []
-            
-            for text in all_texts:
-                text = text.strip()
-                if ':' in text and len(text) < 100:
-                    parts = text.split(':', 1)
-                    if len(parts) == 2:
-                        key = parts[0].strip().lower()
-                        value = parts[1].strip()
-                        
-                        field_map = {
-                            'package': 'package_id',
-                            'apk version': 'version',
-                            'size': 'size',
-                            'release date': 'release_date',
-                            'min screen': 'min_screen',
-                            'supported cpu': 'supported_cpu',
-                            'sha1 signature': 'sha1_signature',
-                            'developer (cn)': 'developer_cn',
-                            'organization (o)': 'organization',
-                            'local (l)': 'local',
-                            'country (c)': 'country',
-                            'state/city (st)': 'state_city'
-                        }
-                        
-                        if key in field_map:
-                            data[field_map[key]] = value
-
-        # Verifica o package_id
-        data['package_id'] = package_name
-
-        # Verifica a existencia de campos obrigatórios
+        # Campos obrigatórios com fallback
         required_fields = [
             'name', 'size', 'downloads', 'version', 'release_date',
             'min_screen', 'supported_cpu', 'package_id', 'sha1_signature',
             'developer_cn', 'organization', 'local', 'country', 'state_city'
         ]
-
+        
         for field in required_fields:
             if field not in data:
                 data[field] = "Not available"
         
         return data
+    
+    def _format_downloads(self, downloads: int) -> str:
+        """Formata número de downloads (ex: 2000000000 -> 2B)"""
+        if downloads >= 1000000000:
+            return f"{downloads // 1000000000}B"
+        elif downloads >= 1000000:
+            return f"{downloads // 1000000}M"
+        elif downloads >= 1000:
+            return f"{downloads // 1000}K"
+        return str(downloads)
+    
+    def _format_size(self, size_bytes: int) -> str:
+        """Formata tamanho em bytes para MB"""
+        if size_bytes:
+            size_mb = size_bytes / (1024 * 1024)
+            return f"{size_mb:.1f} MB"
+        return "Not available"
 
-# Função auxiliar
 async def fetch_app_data(package_name: str) -> Dict[str, str]:
     scraper = AptoideScraper()
     return await scraper.get_app_data(package_name)
