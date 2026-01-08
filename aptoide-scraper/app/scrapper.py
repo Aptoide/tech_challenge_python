@@ -50,3 +50,13 @@ class AptoideScrapper:
             if len(parts) >= 2:
                 return parts[1]
         return package_name
+
+    def _app_exists(self,soup: BeaultifulSoup) -> bool:
+        #Verifica existencia do app
+        tittle = soup.find('title')
+        if tittle and 'APK Download' in tittle.text:
+            return True
+
+        apk_section = soup.find(text="APK Information")
+        return apk_section is not None
+    
