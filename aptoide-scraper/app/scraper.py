@@ -44,6 +44,7 @@ class AptoideScraper:
         finally:
             await self.client.aclose()
 
+    #Extração de dados por nome
     def _extract_base_name(self, package_name: str) -> str:
         if package_name.startswith('com.'):
             parts = package_name.split('.')
