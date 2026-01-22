@@ -1,71 +1,77 @@
-# 🐍 Python Developer Challenge – Aptoide Scraper API
+# 🕵️ Reverse Engineering Challenge – Go Client API Discovery
 
-Welcome to the coding challenge! 🚀 
-Your task is to build a Python-based API that scrapes package data from the Aptoide app store (https://en.aptoide.com/) and exposes it through a REST endpoint.
+Welcome to the technical challenge! 🚀
+In this exercise, you will analyze a compiled Go client application and reverse-engineer how it communicates with a remote API.
+
+Your goal is to discover the API contract (endpoint, protocol, and data format) used by the Go application and then reproduce the same request using Python.
 
 ## 📋 Challenge Description
 
-You are required to:  
-1 - Develop an API (using FastAPI or Flask, your choice) that exposes an endpoint:
+Your tasks are to:
+
+### 1 - Analyze the Go binary
+Choose one of the binaries provided in this repository according with your OS and architecture (e.g. `client_linux_amd64`). **Please let us know if you need to use a different binary.**
+Analyze the binary and determine:
+- The API base URL
+- The endpoint path
+- The HTTP method
+- The data serialization format (e.g. JSON, Protobuf, etc.)
+- The request and response structure
+- Any required headers
+
+You may use any reasonable tools or techniques, such as:
+- Static analysis (strings, file, go tool, etc.)
+- Dynamic analysis (running the binary, inspecting traffic)
+- Network inspection tools
+- Reverse-engineering tools
+- Artificial Intelligence tools 🤖
+
+### 2 - Reproduce the request using Python
+Create a Python script that:
+- Sends exactly the same request as the Go client
+- Uses the same serialization format
+- Correctly parses the response
+- Prints the same success message as the Go client
+
+
+## Expected Behavior
+
+Execute your Python script and it should print the same success message as the Go client, by calling the API directly.
 ```
-GET /aptoide?package_name=<package_id>
+Congrats!! You sent a valid request!
 ```
 
-2 - This endpoint should:
-  - Accept a package name as a query parameter (e.g. com.facebook.katana).
-  - Scrape or fetch package details from Aptoide.
-  - Return all relevant metadata about the app in JSON format.
-
-## 🧾 Example
-
-Request:
-```
-GET /aptoide?package_name=com.facebook.katana
-```
-
-Response (JSON):
-```
-{
-  "name": "Facebook",
-  "size": "152.5 MB",
-  "downloads": "2B",
-  "version": "532.0.0.55.71",
-  "release_date": "2025-09-30 17:06:59",
-  "min_screen": "SMALL",
-  "supported_cpu": "arm64-v8a",
-  "package_id": "com.facebook.katana",
-  "sha1_signature": "8A:3C:4B:26:2D:72:1A:CD:49:A4:BF:97:D5:21:31:99:C8:6F:A2:B9",
-  "developer_cn": "Facebook Corporation",
-  "organization": "Facebook Mobile",
-  "local": "Palo Alto",
-  "country": "US",
-  "state_city": "CA"
-}
-```
 
 ## ✅ Requirements
 
 - Use Python 3.9+.
-- Use a modern API framework (FastAPI preferred).
-- Write clean, well-structured, and documented code.
-- Ensure that errors (e.g. missing package, invalid input) are handled gracefully.
-- Include instructions to run the project locally.
+- Write clean, simple, well-structured, and documented script that is runnable with:
+```
+python3 client.py
+```
+- Ensure that errors (e.g. the API is not reachable...) are handled gracefully.
+  
 
 ## 🚀 Deliverables
 
 Create GitHub repository (and share the link with the Aptoide Recruitment team) containing:
 - Your *source code*,
-- A README.md with:
-    - Setup instructions.
-    - Example requests/responses.
-    - Any assumptions or design decisions.
+  - ```client.py```
+- A **README.md** with:
+  - How you analyzed the Go binary
+  - How you discovered:
+    - The endpoint
+    - The request format
+  - How to run your script
+  - Any assumptions or trade-offs you made
 
 ## 🎯 Evaluation Criteria
 
-- Functionality & scalability
-- Code readability & structure.
-- API design principles.
-- Error handling.
-- Testing approach.
+- Reverse-engineering skills - Ability to infer protocol and behavior
+- Systems understanding - HTTP, serialization, tooling
+- Code quality	- Clean, readable Python
+- Accuracy -	Request matches Go client behavior
+- Documentation -	Clear explanation of reasoning
+- Pragmatism - Realistic approach, **not overengineering**
 
 Good luck, and happy coding! 💻✨
