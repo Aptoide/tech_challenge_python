@@ -31,16 +31,10 @@ Create a Python script that:
 - Sends exactly the same request as the Go client
 - Uses the same serialization format
 - Correctly parses the response
-- Prints the same success message as the Go client
-
-
-## Expected Behavior
-
-Execute your Python script and it should print the same success message as the Go client, by calling the API directly.
+- Prints the same success message as the Go client, by calling the API directly:
 ```
 Congrats!! You sent a valid request!
 ```
-
 
 ## ✅ Requirements
 
